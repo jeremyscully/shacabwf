@@ -3,16 +3,39 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ShacabWf</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - Change Request System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ShacabWf.Web.styles.css" asp-append-version="true" />
+    
+    @{
+        // Get the current user's theme preference
+        var theme = "Default";
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userId) && int.TryParse(userId, out int id))
+            {
+                var user = await Context.RequestServices.GetService<ShacabWf.Web.Services.IAuthService>()?.GetUserByIdAsync(id);
+                if (user != null)
+                {
+                    theme = user.Theme;
+                }
+            }
+        }
+        
+        // Include the theme CSS if it's not the default theme
+        if (theme != "Default")
+        {
+            <link rel="stylesheet" href="~/css/@(theme.ToLower())-theme.css" asp-append-version="true" />
+        }
+    }
 </head>
-<body>
+<body class="bg-light">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ShacabWf</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Change Request System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,8 +43,27 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Simple"><i class="bi bi-house"></i> Home</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="ChangeRequests" asp-action="Index"><i class="bi bi-list-check"></i> Change Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="ChangeRequests" asp-action="MyRequests"><i class="bi bi-person-lines-fill"></i> My Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="SimpleDashboard">
+                                <i class="bi bi-speedometer2 me-1"></i>Simple Dashboard
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="TestData">
+                                    <i class="bi bi-database-fill-gear me-1"></i>Test Data
+                                </a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -36,11 +78,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - ShacabWf - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Change Request System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -1,0 +1,157 @@
+@model IEnumerable<ShacabWf.Web.Models.ChangeRequest>
+@using ShacabWf.Web.Models
+
+@{
+    ViewData["Title"] = "CAB Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>CAB Dashboard</h1>
+        <a asp-controller="Home" asp-action="Simple" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            There are no change requests requiring CAB review at this time.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Pending CAB Approval</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Where(cr => cr.Status == ChangeRequestStatus.SubmittedForCABApproval))
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Title</td>
+                                    <td>@(item.CreatedBy?.FullName ?? "Unknown")</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(item.Status)">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetPriorityBadgeClass(item.Priority)">
+                                            @item.Priority
+                                        </span>
+                                    </td>
+                                    <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Review
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Scheduled Changes</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Scheduled Start</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Where(cr => cr.Status == ChangeRequestStatus.Scheduled || cr.Status == ChangeRequestStatus.CABApproved))
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Title</td>
+                                    <td>@(item.CreatedBy?.FullName ?? "Unknown")</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(item.Status)">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetPriorityBadgeClass(item.Priority)">
+                                            @item.Priority
+                                        </span>
+                                    </td>
+                                    <td>@(item.ScheduledStartDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</td>
+                                    <td>
+                                        <a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Manage
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(ChangeRequestStatus status)
+    {
+        return status switch
+        {
+            ChangeRequestStatus.Draft => "bg-secondary",
+            ChangeRequestStatus.SubmittedForSupervisorApproval => "bg-info",
+            ChangeRequestStatus.SubmittedForCABApproval => "bg-warning",
+            ChangeRequestStatus.SupervisorApproved => "bg-success",
+            ChangeRequestStatus.CABApproved => "bg-success",
+            ChangeRequestStatus.Scheduled => "bg-primary",
+            ChangeRequestStatus.InProgress => "bg-primary",
+            ChangeRequestStatus.Completed => "bg-success",
+            ChangeRequestStatus.Failed => "bg-danger",
+            ChangeRequestStatus.SupervisorRejected => "bg-danger",
+            ChangeRequestStatus.CABRejected => "bg-danger",
+            ChangeRequestStatus.Cancelled => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetPriorityBadgeClass(ChangeRequestPriority priority)
+    {
+        return priority switch
+        {
+            ChangeRequestPriority.Low => "bg-success",
+            ChangeRequestPriority.Medium => "bg-warning",
+            ChangeRequestPriority.High => "bg-danger",
+            ChangeRequestPriority.Critical => "bg-danger text-white",
+            _ => "bg-secondary"
+        };
+    }
+} 

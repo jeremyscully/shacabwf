@@ -1,25 +1,297 @@
-@model dynamic
+@model ShacabWf.Web.Controllers.DashboardViewModel
 
 @{
-    ViewData["Title"] = "Welcome to ShacabWf";
+    ViewData["Title"] = "Change Request Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to ShacabWf</h1>
-    <p class="lead">Hello, @Model.UserName! You have successfully logged in.</p>
-    <p>Current time: @Model.CurrentTime.ToString("f")</p>
-    
-    <div class="mt-4">
-        <h2>Your Simple Dashboard</h2>
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5 class="card-title">Quick Links</h5>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action">Dashboard</a>
-                    <a href="#" class="list-group-item list-group-item-action">Profile</a>
-                    <a href="#" class="list-group-item list-group-item-action">Settings</a>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="display-5 mb-0">Welcome to ShacabWf</h1>
+                    <p class="lead">Hello, @Model.User.FullName! You have successfully logged in.</p>
+                    <p class="text-muted">Current time: @Model.CurrentTime.ToString("f")</p>
                 </div>
             </div>
         </div>
     </div>
-</div> 
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">Quick Actions</h2>
+                <a href="/change-requests/new" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Change Request
+                </a>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-list-check text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="card-title mt-3">My Requests</h5>
+                            <p class="card-text">View and manage your change requests</p>
+                            <a href="/change-requests/my-requests" class="btn btn-outline-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.PendingApprovals.Any())
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-check2-circle text-success" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-3">Pending Approvals</h5>
+                                <p class="card-text">Review and approve change requests</p>
+                                <a href="/change-requests/pending-approval" class="btn btn-outline-success">Review</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.AssignedChangeRequests.Any())
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-tools text-warning" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-3">My Assignments</h5>
+                                <p class="card-text">Manage your assigned change requests</p>
+                                <a href="/change-requests/assigned" class="btn btn-outline-warning">Manage</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.User.IsCABMember)
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-check text-info" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-3">CAB Dashboard</h5>
+                                <p class="card-text">Manage CAB approvals and scheduling</p>
+                                <a href="/change-requests/cab" class="btn btn-outline-info">View</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model.UserChangeRequests.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0">My Recent Change Requests</h2>
+                    <a href="/change-requests/my-requests" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cr in Model.UserChangeRequests)
+                            {
+                                <tr>
+                                    <td>@cr.ChangeRequestNumber</td>
+                                    <td>@cr.Title</td>
+                                    <td><span class="badge bg-@GetStatusBadgeColor(cr.Status)">@cr.Status</span></td>
+                                    <td><span class="badge bg-@GetPriorityBadgeColor(cr.Priority)">@cr.Priority</span></td>
+                                    <td>@cr.CreatedAt.ToString("g")</td>
+                                    <td>
+                                        <a href="/change-requests/@cr.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.PendingApprovals.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0">Pending Approvals</h2>
+                    <a href="/change-requests/pending-approval" class="btn btn-sm btn-outline-success">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cr in Model.PendingApprovals)
+                            {
+                                <tr>
+                                    <td>@cr.ChangeRequestNumber</td>
+                                    <td>@cr.Title</td>
+                                    <td>@cr.CreatedBy?.FullName</td>
+                                    <td><span class="badge bg-@GetStatusBadgeColor(cr.Status)">@cr.Status</span></td>
+                                    <td><span class="badge bg-@GetPriorityBadgeColor(cr.Priority)">@cr.Priority</span></td>
+                                    <td>
+                                        <a href="/change-requests/@cr.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                        <a href="/change-requests/@cr.Id/approve" class="btn btn-sm btn-outline-success">Approve</a>
+                                        <a href="/change-requests/@cr.Id/reject" class="btn btn-sm btn-outline-danger">Reject</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.AssignedChangeRequests.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0">My Assignments</h2>
+                    <a href="/change-requests/assigned" class="btn btn-sm btn-outline-warning">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                                <th>Scheduled</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cr in Model.AssignedChangeRequests)
+                            {
+                                <tr>
+                                    <td>@cr.ChangeRequestNumber</td>
+                                    <td>@cr.Title</td>
+                                    <td>@cr.CreatedBy?.FullName</td>
+                                    <td><span class="badge bg-@GetStatusBadgeColor(cr.Status)">@cr.Status</span></td>
+                                    <td>
+                                        @if (cr.ScheduledStartDate.HasValue)
+                                        {
+                                            @cr.ScheduledStartDate.Value.ToString("g")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not scheduled</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/change-requests/@cr.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                        @if (cr.Status == ShacabWf.Web.Models.ChangeRequestStatus.Scheduled)
+                                        {
+                                            <a href="/change-requests/@cr.Id/start" class="btn btn-sm btn-outline-warning">Start</a>
+                                        }
+                                        @if (cr.Status == ShacabWf.Web.Models.ChangeRequestStatus.InProgress)
+                                        {
+                                            <a href="/change-requests/@cr.Id/complete" class="btn btn-sm btn-outline-success">Complete</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">Recent Change Requests</h2>
+                <a href="/change-requests" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Requester</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cr in Model.RecentChangeRequests)
+                        {
+                            <tr>
+                                <td>@cr.ChangeRequestNumber</td>
+                                <td>@cr.Title</td>
+                                <td>@cr.CreatedBy?.FullName</td>
+                                <td><span class="badge bg-@GetStatusBadgeColor(cr.Status)">@cr.Status</span></td>
+                                <td><span class="badge bg-@GetPriorityBadgeColor(cr.Priority)">@cr.Priority</span></td>
+                                <td>@cr.CreatedAt.ToString("g")</td>
+                                <td>
+                                    <a href="/change-requests/@cr.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeColor(ShacabWf.Web.Models.ChangeRequestStatus status)
+    {
+        return status switch
+        {
+            ShacabWf.Web.Models.ChangeRequestStatus.Draft => "secondary",
+            ShacabWf.Web.Models.ChangeRequestStatus.SubmittedForSupervisorApproval => "info",
+            ShacabWf.Web.Models.ChangeRequestStatus.SupervisorApproved => "primary",
+            ShacabWf.Web.Models.ChangeRequestStatus.SupervisorRejected => "danger",
+            ShacabWf.Web.Models.ChangeRequestStatus.SubmittedForCABApproval => "info",
+            ShacabWf.Web.Models.ChangeRequestStatus.CABApproved => "primary",
+            ShacabWf.Web.Models.ChangeRequestStatus.CABRejected => "danger",
+            ShacabWf.Web.Models.ChangeRequestStatus.Scheduled => "warning",
+            ShacabWf.Web.Models.ChangeRequestStatus.InProgress => "warning",
+            ShacabWf.Web.Models.ChangeRequestStatus.Completed => "success",
+            ShacabWf.Web.Models.ChangeRequestStatus.Failed => "danger",
+            ShacabWf.Web.Models.ChangeRequestStatus.Cancelled => "danger",
+            _ => "secondary"
+        };
+    }
+
+    string GetPriorityBadgeColor(ShacabWf.Web.Models.ChangeRequestPriority priority)
+    {
+        return priority switch
+        {
+            ShacabWf.Web.Models.ChangeRequestPriority.Low => "success",
+            ShacabWf.Web.Models.ChangeRequestPriority.Medium => "primary",
+            ShacabWf.Web.Models.ChangeRequestPriority.High => "warning",
+            ShacabWf.Web.Models.ChangeRequestPriority.Critical => "danger",
+            _ => "secondary"
+        };
+    }
+} 

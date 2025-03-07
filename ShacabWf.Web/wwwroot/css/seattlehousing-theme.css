@@ -1,0 +1,176 @@
+/* Seattlehousing Theme - Based on Seattle Housing Authority colors */
+
+:root {
+    /* Primary colors */
+    --primary: #007D69;      /* Teal green */
+    --primary-dark: #005E4F; /* Darker teal */
+    --primary-light: #4ABAAA; /* Lighter teal */
+    
+    /* Secondary colors */
+    --secondary: #F26722;    /* Orange */
+    --secondary-dark: #D14E0B; /* Darker orange */
+    --secondary-light: #FF8F5A; /* Lighter orange */
+    
+    /* Neutral colors */
+    --neutral-dark: #333333; /* Dark gray */
+    --neutral: #666666;      /* Medium gray */
+    --neutral-light: #EEEEEE; /* Light gray */
+    
+    /* Background colors */
+    --bg-primary: #FFFFFF;   /* White */
+    --bg-secondary: #F5F5F5; /* Off-white */
+    
+    /* Text colors */
+    --text-primary: #333333; /* Dark gray */
+    --text-secondary: #666666; /* Medium gray */
+    --text-light: #FFFFFF;   /* White */
+    
+    /* Status colors */
+    --success: #28a745;      /* Green */
+    --info: #17a2b8;         /* Blue */
+    --warning: #ffc107;      /* Yellow */
+    --danger: #dc3545;       /* Red */
+}
+
+/* Override Bootstrap theme colors */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
+    background-color: var(--secondary-dark) !important;
+    border-color: var(--secondary-dark) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-outline-secondary {
+    color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+}
+
+/* Navigation */
+.navbar-dark {
+    background-color: var(--primary) !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .nav-link {
+    color: var(--text-light) !important;
+}
+
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link:focus {
+    color: var(--secondary-light) !important;
+}
+
+/* Cards */
+.card-header {
+    background-color: var(--primary);
+    color: var(--text-light);
+}
+
+.card {
+    border-color: var(--neutral-light);
+}
+
+/* Tables */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 125, 105, 0.1);
+}
+
+.table thead th {
+    background-color: var(--primary);
+    color: var(--text-light);
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 125, 105, 0.25);
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--primary);
+}
+
+.badge-secondary {
+    background-color: var(--secondary);
+}
+
+/* Links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* Custom elements */
+.sidebar {
+    background-color: var(--bg-secondary);
+}
+
+.footer {
+    background-color: var(--neutral-light);
+    color: var(--text-secondary);
+}
+
+/* Status badges */
+.bg-success {
+    background-color: var(--success) !important;
+}
+
+.bg-info {
+    background-color: var(--info) !important;
+}
+
+.bg-warning {
+    background-color: var(--warning) !important;
+}
+
+.bg-danger {
+    background-color: var(--danger) !important;
+} 

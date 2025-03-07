@@ -1,0 +1,135 @@
+@{
+    ViewData["Title"] = "Test Data Generation";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Test Data Generation</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        Use this page to generate test data for the application. This is useful for development and testing purposes.
+                    </p>
+                    
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Warning:</strong> This will delete existing data for the selected user and replace it with test data.
+                    </div>
+                    
+                    <div class="mt-4 mb-4">
+                        <h4>Test Users</h4>
+                        <p>
+                            Create or update test users with known credentials:
+                        </p>
+                        <ul>
+                            <li><strong>Admin:</strong> Username: admin, Password: Admin123!</li>
+                            <li><strong>Manager:</strong> Username: manager, Password: Manager123!</li>
+                            <li><strong>User1:</strong> Username: user1, Password: User123!</li>
+                            <li><strong>Support:</strong> Username: support, Password: Support123!</li>
+                        </ul>
+                        <button id="generateUsers" class="btn btn-primary">
+                            <i class="bi bi-people-fill me-2"></i>Generate Test Users
+                        </button>
+                        <div id="userResult" class="mt-3 d-none alert alert-success"></div>
+                    </div>
+                    
+                    <hr />
+                    
+                    <div class="mt-4">
+                        <h4>Change Requests</h4>
+                        <p>
+                            Generate test change requests for user1 with various statuses, priorities, and dates.
+                        </p>
+                        <button id="generateChangeRequests" class="btn btn-primary">
+                            <i class="bi bi-database-fill-add me-2"></i>Generate Change Requests
+                        </button>
+                        <div id="changeRequestResult" class="mt-3 d-none alert alert-success"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle generate users button click
+            $("#generateUsers").click(function() {
+                const button = $(this);
+                const resultDiv = $("#userResult");
+                
+                // Disable button and show loading state
+                button.prop("disabled", true);
+                button.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generating...');
+                
+                // Call API to generate users
+                $.ajax({
+                    url: "/api/TestData/seed-users",
+                    type: "POST",
+                    success: function(response) {
+                        resultDiv.removeClass("d-none alert-danger").addClass("alert-success");
+                        resultDiv.html(`<i class="bi bi-check-circle-fill me-2"></i>${response.message}`);
+                    },
+                    error: function(xhr) {
+                        let errorMessage = "An error occurred while generating test users.";
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        resultDiv.removeClass("d-none alert-success").addClass("alert-danger");
+                        resultDiv.html(`<i class="bi bi-x-circle-fill me-2"></i>Error: ${errorMessage}`);
+                    },
+                    complete: function() {
+                        // Re-enable button and restore original text
+                        button.prop("disabled", false);
+                        button.html('<i class="bi bi-people-fill me-2"></i>Generate Test Users');
+                        
+                        // Show result
+                        resultDiv.removeClass("d-none");
+                    }
+                });
+            });
+            
+            // Handle generate change requests button click
+            $("#generateChangeRequests").click(function() {
+                const button = $(this);
+                const resultDiv = $("#changeRequestResult");
+                
+                // Disable button and show loading state
+                button.prop("disabled", true);
+                button.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generating...');
+                
+                // Call API to generate change requests
+                $.ajax({
+                    url: "/api/TestData/seed-change-requests",
+                    type: "POST",
+                    success: function(response) {
+                        resultDiv.removeClass("d-none alert-danger").addClass("alert-success");
+                        resultDiv.html(`<i class="bi bi-check-circle-fill me-2"></i>${response.message}`);
+                    },
+                    error: function(xhr) {
+                        let errorMessage = "An error occurred while generating test data.";
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        resultDiv.removeClass("d-none alert-success").addClass("alert-danger");
+                        resultDiv.html(`<i class="bi bi-x-circle-fill me-2"></i>Error: ${errorMessage}`);
+                    },
+                    complete: function() {
+                        // Re-enable button and restore original text
+                        button.prop("disabled", false);
+                        button.html('<i class="bi bi-database-fill-add me-2"></i>Generate Change Requests');
+                        
+                        // Show result
+                        resultDiv.removeClass("d-none");
+                    }
+                });
+            });
+        });
+    </script>
+} 
