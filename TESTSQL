@@ -1,0 +1,206 @@
+
+USE [shacab]
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChangeRequestApprovals]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChangeRequestApprovals](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ChangeRequestId] [int] NOT NULL,
+	[ApproverId] [int] NOT NULL,
+	[Type] [int] NOT NULL,
+	[Status] [int] NOT NULL,
+	[Comments] [nvarchar](500) NULL,
+	[RequestedAt] [datetime2](7) NOT NULL,
+	[ActionedAt] [datetime2](7) NULL,
+ CONSTRAINT [PK_ChangeRequestApprovals] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChangeRequestAssignments]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChangeRequestAssignments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ChangeRequestId] [int] NOT NULL,
+	[AssigneeId] [int] NOT NULL,
+	[Role] [nvarchar](100) NOT NULL,
+	[Notes] [nvarchar](500) NULL,
+	[AssignedAt] [datetime2](7) NOT NULL,
+	[Status] [int] NOT NULL,
+ CONSTRAINT [PK_ChangeRequestAssignments] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChangeRequestComments]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChangeRequestComments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ChangeRequestId] [int] NOT NULL,
+	[CommenterId] [int] NOT NULL,
+	[Text] [nvarchar](max) NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+	[IsInternal] [bit] NOT NULL,
+ CONSTRAINT [PK_ChangeRequestComments] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChangeRequestHistory]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChangeRequestHistory](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ChangeRequestId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ActionType] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[PreviousState] [nvarchar](max) NULL,
+	[NewState] [nvarchar](max) NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_ChangeRequestHistory] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChangeRequests]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChangeRequests](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ChangeRequestNumber] [nvarchar](20) NOT NULL,
+	[Title] [nvarchar](200) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[Justification] [nvarchar](500) NULL,
+	[RiskAssessment] [nvarchar](500) NULL,
+	[BackoutPlan] [nvarchar](500) NULL,
+	[Status] [int] NOT NULL,
+	[Priority] [int] NOT NULL,
+	[Type] [int] NOT NULL,
+	[Impact] [int] NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+	[ScheduledStartDate] [datetime2](7) NULL,
+	[ScheduledEndDate] [datetime2](7) NULL,
+	[ImplementedAt] [datetime2](7) NULL,
+	[CreatedById] [int] NOT NULL,
+ CONSTRAINT [PK_ChangeRequests] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 3/7/2025 10:09:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Username] [nvarchar](100) NOT NULL,
+	[Email] [nvarchar](100) NOT NULL,
+	[FirstName] [nvarchar](100) NOT NULL,
+	[LastName] [nvarchar](100) NOT NULL,
+	[Department] [nvarchar](200) NOT NULL,
+	[SupervisorId] [int] NULL,
+	[IsCABMember] [bit] NOT NULL,
+	[IsSupportPersonnel] [bit] NOT NULL,
+	[Password] [nvarchar](100) NOT NULL,
+	[Roles] [nvarchar](255) NULL,
+	[Theme] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Users] ADD  DEFAULT (N'') FOR [Password]
+GO
+ALTER TABLE [dbo].[Users] ADD  DEFAULT ('Default') FOR [Theme]
+GO
+ALTER TABLE [dbo].[ChangeRequestApprovals]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestApprovals_ChangeRequests_ChangeRequestId] FOREIGN KEY([ChangeRequestId])
+REFERENCES [dbo].[ChangeRequests] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ChangeRequestApprovals] CHECK CONSTRAINT [FK_ChangeRequestApprovals_ChangeRequests_ChangeRequestId]
+GO
+ALTER TABLE [dbo].[ChangeRequestApprovals]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestApprovals_Users_ApproverId] FOREIGN KEY([ApproverId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[ChangeRequestApprovals] CHECK CONSTRAINT [FK_ChangeRequestApprovals_Users_ApproverId]
+GO
+ALTER TABLE [dbo].[ChangeRequestAssignments]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestAssignments_ChangeRequests_ChangeRequestId] FOREIGN KEY([ChangeRequestId])
+REFERENCES [dbo].[ChangeRequests] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ChangeRequestAssignments] CHECK CONSTRAINT [FK_ChangeRequestAssignments_ChangeRequests_ChangeRequestId]
+GO
+ALTER TABLE [dbo].[ChangeRequestAssignments]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestAssignments_Users_AssigneeId] FOREIGN KEY([AssigneeId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[ChangeRequestAssignments] CHECK CONSTRAINT [FK_ChangeRequestAssignments_Users_AssigneeId]
+GO
+ALTER TABLE [dbo].[ChangeRequestComments]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestComments_ChangeRequests_ChangeRequestId] FOREIGN KEY([ChangeRequestId])
+REFERENCES [dbo].[ChangeRequests] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ChangeRequestComments] CHECK CONSTRAINT [FK_ChangeRequestComments_ChangeRequests_ChangeRequestId]
+GO
+ALTER TABLE [dbo].[ChangeRequestComments]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestComments_Users_CommenterId] FOREIGN KEY([CommenterId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[ChangeRequestComments] CHECK CONSTRAINT [FK_ChangeRequestComments_Users_CommenterId]
+GO
+ALTER TABLE [dbo].[ChangeRequestHistory]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestHistory_ChangeRequests_ChangeRequestId] FOREIGN KEY([ChangeRequestId])
+REFERENCES [dbo].[ChangeRequests] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ChangeRequestHistory] CHECK CONSTRAINT [FK_ChangeRequestHistory_ChangeRequests_ChangeRequestId]
+GO
+ALTER TABLE [dbo].[ChangeRequestHistory]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequestHistory_Users_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[ChangeRequestHistory] CHECK CONSTRAINT [FK_ChangeRequestHistory_Users_UserId]
+GO
+ALTER TABLE [dbo].[ChangeRequests]  WITH CHECK ADD  CONSTRAINT [FK_ChangeRequests_Users_CreatedById] FOREIGN KEY([CreatedById])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[ChangeRequests] CHECK CONSTRAINT [FK_ChangeRequests_Users_CreatedById]
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Users_SupervisorId] FOREIGN KEY([SupervisorId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Users_SupervisorId]
+GO
