@@ -1,0 +1,25 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Welcome to ShacabWf";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to ShacabWf</h1>
+    <p class="lead">Hello, @Model.UserName! You have successfully logged in.</p>
+    <p>Current time: @Model.CurrentTime.ToString("f")</p>
+    
+    <div class="mt-4">
+        <h2>Your Simple Dashboard</h2>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Quick Links</h5>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">Dashboard</a>
+                    <a href="#" class="list-group-item list-group-item-action">Profile</a>
+                    <a href="#" class="list-group-item list-group-item-action">Settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
