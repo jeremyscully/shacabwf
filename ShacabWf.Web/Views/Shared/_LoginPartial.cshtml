@@ -11,7 +11,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <li>
-                <a class="dropdown-item" asp-controller="Profile" asp-action="Index">
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString">
                     <i class="bi bi-gear"></i> My Profile
                 </a>
             </li>

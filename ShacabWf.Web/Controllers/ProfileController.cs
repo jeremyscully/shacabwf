@@ -37,7 +37,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         // GET: Profile
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string returnUrl = null)
         {
             try
             {
@@ -52,14 +52,12 @@ namespace ShacabWf.Web.Controllers
                 // Create a view model for the profile
                 var model = new ProfileViewModel
                 {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Department = user.Department,
-                    Theme = user.Theme
+                    Theme = user.Theme ?? "Default",
+                    ReturnUrl = returnUrl ?? Url.Action("Simple", "Home") // Default to home page if no return URL
                 };
+
+                // Store return URL in ViewBag as well
+                ViewBag.ReturnUrl = model.ReturnUrl;
 
                 return View(model);
             }
@@ -73,7 +71,7 @@ namespace ShacabWf.Web.Controllers
         // POST: Profile/UpdateTheme
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateTheme(string theme)
+        public async Task<IActionResult> UpdateTheme(string theme, string returnUrl = null)
         {
             try
             {
@@ -86,10 +84,12 @@ namespace ShacabWf.Web.Controllers
                 }
 
                 // Validate theme
-                if (theme != "Default" && theme != "Seattlehousing")
+                if (string.IsNullOrEmpty(theme))
                 {
                     theme = "Default";
                 }
+
+                _logger.LogInformation("Attempting to update theme from {OldTheme} to {NewTheme}", user.Theme, theme);
 
                 // Update theme
                 user.Theme = theme;
@@ -97,7 +97,12 @@ namespace ShacabWf.Web.Controllers
 
                 _logger.LogInformation("User {Username} updated theme to {Theme}", user.Username, theme);
 
-                // Redirect back to profile
+                // Redirect back to the return URL if provided, otherwise to profile
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -106,17 +111,70 @@ namespace ShacabWf.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-    }
+        
+        // POST: Profile/UpdatePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePassword(ProfileViewModel model)
+        {
+            // If password fields are not provided, just return to the profile page
+            if (string.IsNullOrEmpty(model.CurrentPassword) || 
+                string.IsNullOrEmpty(model.NewPassword) || 
+                string.IsNullOrEmpty(model.ConfirmPassword))
+            {
+                ModelState.AddModelError("", "All password fields are required.");
+                return View("Index", model);
+            }
+            
+            // Validate that new password and confirm password match
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "The new password and confirmation password do not match.");
+                return View("Index", model);
+            }
+            
+            try
+            {
+                int userId = GetCurrentUserId();
+                var user = await _context.Users.FindAsync(userId);
 
-    // View model for the profile page
-    public class ProfileViewModel
-    {
-        public int Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Department { get; set; } = string.Empty;
-        public string Theme { get; set; } = "Default";
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Verify current password
+                if (user.Password != model.CurrentPassword)
+                {
+                    ModelState.AddModelError("CurrentPassword", "Current password is incorrect.");
+                    return View("Index", model);
+                }
+
+                _logger.LogInformation("Attempting to update password for user {Username}", user.Username);
+
+                // Update password
+                user.Password = model.NewPassword;
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Password updated successfully for user {Username}", user.Username);
+
+                // Add success message
+                TempData["SuccessMessage"] = "Your password has been updated successfully.";
+
+                // Redirect back to the return URL if provided, otherwise to profile
+                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                {
+                    return Redirect(model.ReturnUrl);
+                }
+                
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user password");
+                ModelState.AddModelError("", "An error occurred while updating your password. Please try again.");
+                return View("Index", model);
+            }
+        }
     }
 } 

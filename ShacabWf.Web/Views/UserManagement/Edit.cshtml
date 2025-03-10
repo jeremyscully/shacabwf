@@ -1,0 +1,188 @@
+@model ShacabWf.Web.ViewModels.UserRolesViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Edit User</h1>
+                <div>
+                    <a asp-action="Details" asp-route-id="@Model.UserId" class="btn btn-info me-2">
+                        <i class="bi bi-info-circle"></i> View Details
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <p class="lead">Manage user information, roles and permissions for @Model.Username</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="Username" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="mb-4">
+                            <h5 class="card-title">User Information</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Username" class="form-label"></label>
+                                        <input class="form-control" value="@Model.Username" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Email" class="form-label"></label>
+                                        <input asp-for="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="FirstName" class="form-label"></label>
+                                        <input asp-for="FirstName" class="form-control" />
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="LastName" class="form-label"></label>
+                                        <input asp-for="LastName" class="form-control" />
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Department" class="form-label"></label>
+                                <input asp-for="Department" class="form-control" />
+                                <span asp-validation-for="Department" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="SupervisorId" class="form-label"></label>
+                                <select asp-for="SupervisorId" class="form-select">
+                                    <option value="">-- No Supervisor --</option>
+                                    @foreach (var supervisor in Model.AvailableSupervisors)
+                                    {
+                                        <option value="@supervisor.Id">@supervisor.FullName (@supervisor.Username)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SupervisorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5 class="card-title">Special Statuses</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input asp-for="IsCABMember" class="form-check-input" />
+                                        <label asp-for="IsCABMember" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input asp-for="IsSupportPersonnel" class="form-check-input" />
+                                        <label asp-for="IsSupportPersonnel" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5 class="card-title">User Roles</h5>
+                            <div class="row">
+                                @foreach (var role in Model.AllRoles)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" 
+                                                   name="SelectedRoles" 
+                                                   value="@role" 
+                                                   id="role_@role" 
+                                                   class="form-check-input" 
+                                                   @(Model.SelectedRoles.Contains(role) ? "checked" : "") />
+                                            <label for="role_@role" class="form-check-label">@role</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Role Descriptions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Admin</h6>
+                        <p class="small">Full system access including user management and configuration.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Supervisor</h6>
+                        <p class="small">Can approve change requests from their direct reports.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold">User</h6>
+                        <p class="small">Basic access to create and view change requests.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Approver</h6>
+                        <p class="small">Can approve change requests in their area of responsibility.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Implementer</h6>
+                        <p class="small">Responsible for implementing approved change requests.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Special Statuses</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold">CAB Member</h6>
+                        <p class="small">Members of the Change Advisory Board who review and approve changes.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Support Personnel</h6>
+                        <p class="small">Technical staff who can be assigned to implement changes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

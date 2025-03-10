@@ -19,6 +19,7 @@ namespace ShacabWf.Web.Data
         public DbSet<ChangeRequestAssignment> ChangeRequestAssignments { get; set; }
         public DbSet<ChangeRequestComment> ChangeRequestComments { get; set; }
         public DbSet<ChangeRequestHistory> ChangeRequestHistory { get; set; }
+        public DbSet<SupportDocument> SupportDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +89,13 @@ namespace ShacabWf.Web.Data
                 .HasOne(crh => crh.User)
                 .WithMany()
                 .HasForeignKey(crh => crh.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure SupportDocument entity
+            modelBuilder.Entity<SupportDocument>()
+                .HasOne(sd => sd.UploadedBy)
+                .WithMany()
+                .HasForeignKey(sd => sd.UploadedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Seed initial data

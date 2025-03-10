@@ -48,6 +48,10 @@ namespace ShacabWf.Web.Models
         [Required]
         public ChangeRequestImpact Impact { get; set; } = ChangeRequestImpact.Medium;
 
+        // Risk level of the change
+        [Required]
+        public RiskLevel Risk { get; set; } = RiskLevel.Medium;
+
         // Creation date
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -98,6 +102,7 @@ namespace ShacabWf.Web.Models
         CABApproved,
         CABRejected,
         Scheduled,
+        Rescheduled,
         InProgress,
         Completed,
         Failed,
@@ -133,5 +138,16 @@ namespace ShacabWf.Web.Models
         Low,
         Medium,
         High
+    }
+
+    /// <summary>
+    /// Represents the risk level of a change request
+    /// </summary>
+    public enum RiskLevel
+    {
+        Low,
+        Medium,
+        High,
+        Critical
     }
 } 

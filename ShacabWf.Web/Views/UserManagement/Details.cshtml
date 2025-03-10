@@ -1,0 +1,175 @@
+@model ShacabWf.Web.ViewModels.UserDetailsViewModel
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>User Details</h1>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-primary me-2">
+                        <i class="bi bi-pencil-square"></i> Edit User
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <p class="lead">Detailed information for @Model.User.Username</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Username:</div>
+                        <div class="col-md-8">@Model.User.Username</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Full Name:</div>
+                        <div class="col-md-8">@Model.User.FullName</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Email:</div>
+                        <div class="col-md-8">@Model.User.Email</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Department:</div>
+                        <div class="col-md-8">@(string.IsNullOrEmpty(Model.User.Department) ? "Not specified" : Model.User.Department)</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Supervisor:</div>
+                        <div class="col-md-8">
+                            @if (Model.Supervisor != null)
+                            {
+                                <a asp-action="Details" asp-route-id="@Model.Supervisor.Id">
+                                    @Model.Supervisor.FullName (@Model.Supervisor.Username)
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">None</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Roles and Permissions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Roles:</div>
+                        <div class="col-md-8">
+                            @if (string.IsNullOrEmpty(Model.User.Roles))
+                            {
+                                <span class="text-muted">No roles assigned</span>
+                            }
+                            else
+                            {
+                                <div>
+                                    @foreach (var role in Model.User.Roles.Split(',').Select(r => r.Trim()))
+                                    {
+                                        <span class="badge bg-primary me-1 mb-1">@role</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">CAB Member:</div>
+                        <div class="col-md-8">
+                            @if (Model.User.IsCABMember)
+                            {
+                                <span class="badge bg-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Support Personnel:</div>
+                        <div class="col-md-8">
+                            @if (Model.User.IsSupportPersonnel)
+                            {
+                                <span class="badge bg-info">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Direct Reports</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Subordinates.Any())
+                    {
+                        <p class="text-muted">This user has no direct reports.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var subordinate in Model.Subordinates)
+                                    {
+                                        <tr>
+                                            <td>@subordinate.Username</td>
+                                            <td>@subordinate.FullName</td>
+                                            <td>@subordinate.Email</td>
+                                            <td>
+                                                <a asp-action="Details" asp-route-id="@subordinate.Id" class="btn btn-sm btn-info">
+                                                    <i class="bi bi-info-circle"></i> Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Activity</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        <i class="bi bi-info-circle"></i> 
+                        User activity tracking will be implemented in a future update.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

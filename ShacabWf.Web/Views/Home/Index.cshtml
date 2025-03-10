@@ -9,9 +9,16 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h1 class="display-5 mb-0">Welcome to ShacabWf</h1>
-                    <p class="lead">Hello, @Model.User.FullName! You have successfully logged in.</p>
-                    <p class="text-muted">Current time: @Model.CurrentTime.ToString("f")</p>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3 text-warning" style="font-size: 3rem;">
+                            <i class="bi bi-taxi-front-fill"></i>
+                        </div>
+                        <div>
+                            <h1 class="display-5 mb-0">Seattle Housing Authority</h1>
+                            <p class="lead">Change Advisory Board</p>
+                            <p class="text-muted">Current time: @Model.CurrentTime.ToString("f")</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

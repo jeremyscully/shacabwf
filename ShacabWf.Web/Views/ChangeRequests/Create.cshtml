@@ -13,7 +13,7 @@
                     <h4 class="mb-0">Create New Change Request</h4>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create" method="post">
+                    <form asp-controller="ChangeRequests" asp-action="Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                         
                         <div class="mb-3">
@@ -46,9 +46,26 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label asp-for="Type" class="form-label">Type</label>
-                                <select asp-for="Type" class="form-select" asp-items="Html.GetEnumSelectList<ChangeRequestType>()">
+                                <select asp-for="Type" class="form-select">
+                                    <option value="@ChangeRequestType.Standard">Standard</option>
+                                    <option value="@ChangeRequestType.Emergency">Emergency</option>
                                 </select>
                                 <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Risk" class="form-label">Risk</label>
+                                <div class="input-group">
+                                    <select asp-for="Risk" class="form-select" id="riskSelect">
+                                        <option value="@RiskLevel.Low">Low</option>
+                                        <option value="@RiskLevel.Medium">Medium</option>
+                                        <option value="@RiskLevel.High">High</option>
+                                        <option value="@RiskLevel.Critical">Critical</option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-secondary" id="assessRiskBtn">
+                                        Assess Risk
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Risk" class="text-danger"></span>
                             </div>
                         </div>
                         
@@ -73,7 +90,7 @@
                         <div class="d-flex justify-content-between">
                             <a asp-action="MyRequests" class="btn btn-secondary">Cancel</a>
                             <div>
-                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button type="submit" class="btn btn-primary" id="createButton">Create</button>
                             </div>
                         </div>
                     </form>
@@ -83,6 +100,199 @@
     </div>
 </div>
 
+<!-- Risk Assessment Modal -->
+<div class="modal fade" id="riskAssessmentModal" tabindex="-1" aria-labelledby="riskAssessmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="riskAssessmentModalLabel">Risk Assessment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-4">Please answer the following questions to assess the risk level of this change request:</p>
+                
+                <div class="mb-4">
+                    <label for="complexityRating" class="form-label">
+                        <strong>1. Complexity:</strong> On a scale of 1-10 where 1 is simple and 10 is extremely complicated, how complicated is this change?
+                    </label>
+                    <input type="range" class="form-range" min="1" max="10" id="complexityRating" value="5">
+                    <div class="d-flex justify-content-between">
+                        <span>Simple (1)</span>
+                        <span id="complexityValue">5</span>
+                        <span>Extremely Complicated (10)</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="impactRating" class="form-label">
+                        <strong>2. Infrastructure Impact:</strong> On a scale of 1-10 where 1 is "new feature" and 10 is "many updates to existing infrastructure", how much does this impact existing infrastructure?
+                    </label>
+                    <input type="range" class="form-range" min="1" max="10" id="impactRating" value="5">
+                    <div class="d-flex justify-content-between">
+                        <span>New Feature (1)</span>
+                        <span id="impactValue">5</span>
+                        <span>Many Updates (10)</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="serviceRating" class="form-label">
+                        <strong>3. Service Disruption:</strong> On a scale of 1-10 where 1 is "no disruption" and 10 is "complete service outage", how much service disruption might this change cause?
+                    </label>
+                    <input type="range" class="form-range" min="1" max="10" id="serviceRating" value="5">
+                    <div class="d-flex justify-content-between">
+                        <span>No Disruption (1)</span>
+                        <span id="serviceValue">5</span>
+                        <span>Complete Outage (10)</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="testingRating" class="form-label">
+                        <strong>4. Testing Coverage:</strong> On a scale of 1-10 where 1 is "fully tested" and 10 is "no testing possible", how well can this change be tested before implementation?
+                    </label>
+                    <input type="range" class="form-range" min="1" max="10" id="testingRating" value="5">
+                    <div class="d-flex justify-content-between">
+                        <span>Fully Tested (1)</span>
+                        <span id="testingValue">5</span>
+                        <span>No Testing (10)</span>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <strong>Calculated Risk Level:</strong>
+                        </div>
+                        <div>
+                            <span id="calculatedRiskLevel" class="badge bg-info">Medium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="applyRiskBtn">Apply Risk Assessment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Add a click handler to log when the button is clicked
+        document.getElementById('createButton').addEventListener('click', function(e) {
+            console.log('Create button clicked');
+        });
+
+        // Add a submit handler to log when the form is submitted
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('Form submitted');
+        });
+
+        // Risk assessment functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const riskModal = new bootstrap.Modal(document.getElementById('riskAssessmentModal'));
+            const assessRiskBtn = document.getElementById('assessRiskBtn');
+            const applyRiskBtn = document.getElementById('applyRiskBtn');
+            const riskSelect = document.getElementById('riskSelect');
+            
+            // Sliders and their value displays
+            const complexitySlider = document.getElementById('complexityRating');
+            const impactSlider = document.getElementById('impactRating');
+            const serviceSlider = document.getElementById('serviceRating');
+            const testingSlider = document.getElementById('testingRating');
+            
+            const complexityValue = document.getElementById('complexityValue');
+            const impactValue = document.getElementById('impactValue');
+            const serviceValue = document.getElementById('serviceValue');
+            const testingValue = document.getElementById('testingValue');
+            
+            const calculatedRiskLevel = document.getElementById('calculatedRiskLevel');
+            
+            // Update value displays when sliders change
+            complexitySlider.addEventListener('input', function() {
+                complexityValue.textContent = this.value;
+                updateRiskLevel();
+            });
+            
+            impactSlider.addEventListener('input', function() {
+                impactValue.textContent = this.value;
+                updateRiskLevel();
+            });
+            
+            serviceSlider.addEventListener('input', function() {
+                serviceValue.textContent = this.value;
+                updateRiskLevel();
+            });
+            
+            testingSlider.addEventListener('input', function() {
+                testingValue.textContent = this.value;
+                updateRiskLevel();
+            });
+            
+            // Calculate and update risk level
+            function updateRiskLevel() {
+                const complexity = parseInt(complexitySlider.value);
+                const impact = parseInt(impactSlider.value);
+                const service = parseInt(serviceSlider.value);
+                const testing = parseInt(testingSlider.value);
+                
+                const average = (complexity + impact + service + testing) / 4;
+                
+                let riskLevel;
+                let badgeClass;
+                
+                if (average <= 2.5) {
+                    riskLevel = "Low";
+                    badgeClass = "bg-success";
+                } else if (average <= 5) {
+                    riskLevel = "Medium";
+                    badgeClass = "bg-info";
+                } else if (average <= 7.5) {
+                    riskLevel = "High";
+                    badgeClass = "bg-warning";
+                } else {
+                    riskLevel = "Critical";
+                    badgeClass = "bg-danger";
+                }
+                
+                calculatedRiskLevel.textContent = riskLevel;
+                calculatedRiskLevel.className = `badge ${badgeClass}`;
+                
+                return riskLevel;
+            }
+            
+            // Open risk assessment modal
+            assessRiskBtn.addEventListener('click', function() {
+                riskModal.show();
+            });
+            
+            // Apply risk assessment
+            applyRiskBtn.addEventListener('click', function() {
+                const riskLevel = updateRiskLevel();
+                
+                // Update the risk select dropdown
+                for (let i = 0; i < riskSelect.options.length; i++) {
+                    if (riskSelect.options[i].text === riskLevel) {
+                        riskSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                
+                // Update risk assessment text area with details
+                const riskAssessmentText = document.getElementById('RiskAssessment');
+                const assessmentDetails = `Complexity: ${complexitySlider.value}/10\n` +
+                                         `Infrastructure Impact: ${impactSlider.value}/10\n` +
+                                         `Service Disruption: ${serviceSlider.value}/10\n` +
+                                         `Testing Coverage: ${testingSlider.value}/10\n\n` +
+                                         `Overall Risk Level: ${riskLevel}`;
+                
+                riskAssessmentText.value = assessmentDetails;
+                
+                riskModal.hide();
+            });
+        });
+    </script>
 } 

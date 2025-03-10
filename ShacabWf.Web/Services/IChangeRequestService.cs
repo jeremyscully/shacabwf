@@ -43,5 +43,7 @@ namespace ShacabWf.Web.Services
         // Additional methods for dashboard functionality
         Task<IEnumerable<ChangeRequest>> GetPendingApprovalsForUserAsync(int userId);
         Task<IEnumerable<ChangeRequest>> GetChangeRequestsForCABAsync();
+
+        Task<ChangeRequest> DirectScheduleChangeRequestAsync(int changeRequestId, int userId, DateTime startDate, DateTime endDate);
     }
 } 

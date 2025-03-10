@@ -109,8 +109,32 @@ namespace ShacabWf.Web.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Simple()
+        public async Task<IActionResult> Simple()
         {
+            // Set current user for the view if authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                try
+                {
+                    // Find user by username
+                    var currentUser = await _context.Users
+                        .FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
+                    
+                    ViewBag.CurrentUser = currentUser;
+                    
+                    // Log if user not found
+                    if (currentUser == null)
+                    {
+                        _logger.LogWarning("User not found for username: {Username}", User.Identity.Name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors that occur when retrieving the user
+                    _logger.LogError(ex, "Error retrieving user for username: {Username}", User.Identity.Name);
+                }
+            }
+            
             return View("SimpleIndex");
         }
 
@@ -165,5 +189,7 @@ namespace ShacabWf.Web.Controllers
         public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        
+        public string? Message { get; set; }
     }
 } 

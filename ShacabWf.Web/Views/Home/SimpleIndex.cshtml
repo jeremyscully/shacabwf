@@ -7,9 +7,16 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h1 class="display-5 mb-0">Welcome to Change Request System</h1>
-                    <p class="lead">This is a simple dashboard without model dependencies.</p>
-                    <p class="text-muted">Current time: @DateTime.Now.ToString("f")</p>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3 text-warning" style="font-size: 3rem;">
+                            <i class="bi bi-taxi-front-fill"></i>
+                        </div>
+                        <div>
+                            <h1 class="display-5 mb-0">Seattle Housing Authority</h1>
+                            <p class="lead">Change Advisory Board</p>
+                            <p class="text-muted">Current time: @DateTime.Now.ToString("f")</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -19,51 +26,82 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="mb-0">Quick Actions</h2>
-                <a asp-controller="ChangeRequests" asp-action="Create" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> New Change Request
-                </a>
+                @if (User.Identity.IsAuthenticated && ViewBag.CurrentUser != null)
+                {
+                    <a asp-controller="ChangeRequests" asp-action="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> New Change Request
+                    </a>
+                }
             </div>
             <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-list-check text-primary" style="font-size: 2rem;"></i>
-                            <h5 class="card-title mt-3">My Requests</h5>
-                            <p class="card-text">View and manage your change requests</p>
-                            <a asp-controller="ChangeRequests" asp-action="MyRequests" class="btn btn-outline-primary">View</a>
+                @if (User.Identity.IsAuthenticated && ViewBag.CurrentUser != null)
+                {
+                    <!-- My Requests - Available to all authenticated users -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-list-check text-primary" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-3">My Requests</h5>
+                                <p class="card-text">View and manage your change requests</p>
+                                <a asp-controller="ChangeRequests" asp-action="MyRequests" class="btn btn-outline-primary">View</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-check2-circle text-success" style="font-size: 2rem;"></i>
-                            <h5 class="card-title mt-3">Pending Approvals</h5>
-                            <p class="card-text">Review and approve change requests</p>
-                            <a asp-controller="ChangeRequests" asp-action="PendingApproval" class="btn btn-outline-success">Review</a>
+                    
+                    <!-- Pending Approvals - Available to supervisors and CAB members -->
+                    @if (ViewBag.CurrentUser.HasRole("Supervisor") || ViewBag.CurrentUser.HasRole("Admin") || ViewBag.CurrentUser.IsCABMember)
+                    {
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-check2-circle text-success" style="font-size: 2rem;"></i>
+                                    <h5 class="card-title mt-3">Pending Approvals</h5>
+                                    <p class="card-text">Review and approve change requests</p>
+                                    <a asp-controller="ChangeRequests" asp-action="PendingApproval" class="btn btn-outline-success">Review</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <!-- My Assignments - Available to support personnel -->
+                    @if (ViewBag.CurrentUser.IsSupportPersonnel || ViewBag.CurrentUser.HasRole("Admin"))
+                    {
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-tools text-warning" style="font-size: 2rem;"></i>
+                                    <h5 class="card-title mt-3">My Assignments</h5>
+                                    <p class="card-text">Manage your assigned change requests</p>
+                                    <a asp-controller="ChangeRequests" asp-action="Assigned" class="btn btn-outline-warning">Manage</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <!-- CAB Dashboard - Available to CAB members and admins -->
+                    @if (ViewBag.CurrentUser.IsCABMember || ViewBag.CurrentUser.HasRole("Admin"))
+                    {
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-calendar-check text-info" style="font-size: 2rem;"></i>
+                                    <h5 class="card-title mt-3">CAB Dashboard</h5>
+                                    <p class="card-text">Manage CAB approvals and scheduling</p>
+                                    <a asp-controller="ChangeRequests" asp-action="Cab" class="btn btn-outline-info">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Please <a asp-controller="Account" asp-action="Login">log in</a> to access change management features.
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-tools text-warning" style="font-size: 2rem;"></i>
-                            <h5 class="card-title mt-3">My Assignments</h5>
-                            <p class="card-text">Manage your assigned change requests</p>
-                            <a asp-controller="ChangeRequests" asp-action="Assigned" class="btn btn-outline-warning">Manage</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-calendar-check text-info" style="font-size: 2rem;"></i>
-                            <h5 class="card-title mt-3">CAB Dashboard</h5>
-                            <p class="card-text">Manage CAB approvals and scheduling</p>
-                            <a asp-controller="ChangeRequests" asp-action="Cab" class="btn btn-outline-info">View</a>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -71,11 +109,27 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">Recent Change Requests</h2>
-                <a asp-controller="ChangeRequests" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+                <h2 class="mb-0">Support Documents</h2>
+                <div>
+                    @if (User.Identity.IsAuthenticated && ViewBag.CurrentUser != null && ViewBag.CurrentUser.HasRole("Admin"))
+                    {
+                        <a asp-controller="SupportDocuments" asp-action="Create" class="btn btn-sm btn-success me-2">
+                            <i class="bi bi-upload"></i> Upload Document
+                        </a>
+                    }
+                    <a asp-controller="SupportDocuments" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
             </div>
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> This is a simplified view. No actual data is being displayed.
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="mb-3">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Access important documents and resources for the Change Advisory Board process.
+                    </p>
+                    <a asp-controller="SupportDocuments" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-folder2-open me-2"></i> Browse Documents
+                    </a>
+                </div>
             </div>
         </div>
     </div>

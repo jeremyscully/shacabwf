@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Upload Support Document";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Upload Support Document</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-upload me-1"></i>
+            Upload New Document
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label for="file" class="form-label">File</label>
+                    <input type="file" id="file" name="file" class="form-control" required />
+                    <div class="form-text">Only PDF and Word documents (.pdf, .doc, .docx) are allowed.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

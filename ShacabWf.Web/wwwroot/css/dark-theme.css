@@ -1,0 +1,744 @@
+:root { /* Dark Theme - Modern dark mode colors */
+    /* Primary colors */
+    --primary: #7289DA;      /* Discord blue */
+    --primary-dark: #5B73C4; /* Darker blue */
+    --primary-light: #8EA1E1; /* Lighter blue */
+    
+    /* Secondary colors */
+    --secondary: #43B581;    /* Green accent */
+    --secondary-dark: #3A9D6E; /* Darker green */
+    --secondary-light: #57C293; /* Lighter green */
+    
+    /* Neutral colors */
+    --neutral-dark: #121212; /* Very dark gray - darker than before */
+    --neutral: #1E1E1E;      /* Dark gray - darker than before */
+    --neutral-light: #2D2D2D; /* Medium-dark gray - darker than before */
+
+    /* Background colors */
+    --bg-primary: #0A0A0A;   /* Very dark background - even darker than before */
+    --bg-secondary: #121212; /* Slightly lighter background - darker than before */
+
+    /* Text colors */
+    --text-primary: #FFFFFF; /* White */
+    --text-secondary: #E0E0E0; /* Light gray - lighter than before */
+    --text-light: #FFFFFF;   /* Very light gray - now pure white for better contrast */
+
+    /* Border colors */
+    --border-light: #444444; /* Light border color for better visibility */
+    --border-highlight: #555555; /* Highlighted border color */
+
+    /* Status colors */
+    --success: #43B581;      /* Green */
+    --info: #7289DA;         /* Blue */
+    --warning: #FAA61A;      /* Orange */
+    --danger: #F04747;       /* Red */
+}
+
+/* Override Bootstrap theme colors */
+.bg-primary {
+    background-color: var(--primary) !important;
+    color: var(--text-light) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary) !important;
+    color: var(--text-light) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--neutral-dark) !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: var(--text-light) !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--primary) !important;
+}
+
+/* Card styling with light borders */
+.card {
+    background-color: var(--neutral) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.card:hover {
+    border-color: var(--border-highlight) !important;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.card-header {
+    background-color: var(--neutral-dark) !important;
+    border-bottom: 1px solid var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary-dark) !important;
+    color: var(--text-light) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+.btn-secondary {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary-dark) !important;
+    color: var(--text-light) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-dark) !important;
+    border-color: var(--secondary-dark) !important;
+}
+
+/* Table styling */
+.table {
+    color: var(--text-light) !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--neutral-light) !important;
+    color: var(--text-light) !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+}
+
+.table thead th {
+    background-color: var(--neutral-dark) !important;
+    color: var(--text-light) !important;
+    border-bottom: 2px solid var(--border-light) !important;
+}
+
+.table td, .table th {
+    border-top: 1px solid var(--border-light) !important;
+    padding: 0.75rem !important;
+    color: var(--text-light) !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(114, 137, 218, 0.1) !important;
+    color: var(--text-light) !important;
+}
+
+/* Table borders */
+.table-bordered {
+    border: 1px solid var(--border-light) !important;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid var(--border-light) !important;
+}
+
+/* DataTables specific overrides to ensure light text */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--text-light) !important;
+}
+
+/* Ensure DataTables search input has proper styling */
+.dataTables_wrapper .dataTables_filter input {
+    background-color: var(--neutral-light) !important;
+    color: var(--text-light) !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+/* Ensure DataTables pagination buttons have proper styling */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--text-light) !important;
+    background-color: var(--neutral) !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    color: var(--text-light) !important;
+    background-color: var(--primary) !important;
+    border: 1px solid var(--primary-dark) !important;
+}
+
+/* Form controls */
+.form-control {
+    background-color: var(--neutral-light) !important;
+    border-color: #333 !important;
+    color: var(--text-light) !important;
+}
+
+.form-control:focus {
+    background-color: var(--neutral-light) !important;
+    border-color: var(--primary) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 0 0 0.2rem rgba(114, 137, 218, 0.25) !important;
+}
+
+/* Modal styling */
+.modal-content {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+    border: 1px solid var(--border-light) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+.modal-header {
+    background-color: var(--neutral-dark) !important;
+    border-bottom: 1px solid var(--border-light) !important;
+    padding: 1rem !important;
+}
+
+.modal-title {
+    color: var(--text-light) !important;
+    font-weight: 500 !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-light) !important;
+    background-color: var(--neutral) !important;
+}
+
+.modal-backdrop {
+    background-color: #000 !important;
+    opacity: 0.7 !important;
+}
+
+.close {
+    color: var(--text-light) !important;
+    text-shadow: none !important;
+    opacity: 0.8 !important;
+}
+
+.close:hover {
+    color: var(--text-light) !important;
+    opacity: 1 !important;
+}
+
+/* List group styling */
+.list-group-item {
+    background-color: var(--neutral) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Root element and body background */
+html, body {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-light) !important;
+    min-height: 100% !important;
+}
+
+/* Main content container */
+.container, .container-fluid, .content-wrapper, .main-content, .content {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all wrappers and containers have the dark background */
+.wrapper, .page-wrapper, .content-wrapper, #wrapper, #page-wrapper, #content-wrapper {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all sections and main elements have the dark background */
+main, section, header, footer, aside, article, .row, .col, div[class^="col-"] {
+    background-color: transparent !important;
+}
+
+/* Override any white backgrounds */
+.bg-white, .bg-light {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all panels and wells have dark backgrounds */
+.panel, .well {
+    background-color: var(--neutral) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all jumbotrons have dark backgrounds */
+.jumbotron {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all breadcrumbs have dark backgrounds */
+.breadcrumb {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all list groups have dark backgrounds */
+.list-group, .list-group-item {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+    border-color: var(--border-light) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary-light) !important;
+}
+
+a:hover {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    background-color: var(--neutral) !important;
+    border-color: #333 !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dropdown-item {
+    color: var(--text-light) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--neutral-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Pagination */
+.page-item .page-link {
+    background-color: var(--neutral) !important;
+    border-color: #333 !important;
+    color: var(--text-light) !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+/* Alerts */
+.alert-success {
+    background-color: rgba(67, 181, 129, 0.2) !important;
+    border-color: var(--success) !important;
+    color: var(--text-light) !important;
+}
+
+.alert-info {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+    border-color: var(--info) !important;
+    color: var(--text-light) !important;
+}
+
+.alert-warning {
+    background-color: rgba(250, 166, 26, 0.2) !important;
+    border-color: var(--warning) !important;
+    color: var(--text-light) !important;
+}
+
+.alert-danger {
+    background-color: rgba(240, 71, 71, 0.2) !important;
+    border-color: var(--danger) !important;
+    color: var(--text-light) !important;
+}
+
+/* Dashboard specific styles */
+.dashboard-card {
+    background-color: var(--neutral) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+    margin-bottom: 20px !important;
+    padding: 15px !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+.dashboard-card:hover {
+    border-color: var(--border-highlight) !important;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dashboard-card h3 {
+    color: var(--text-light) !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
+}
+
+/* Stats and metrics */
+.stat-value {
+    color: var(--text-light) !important;
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
+}
+
+.stat-label {
+    color: var(--text-secondary) !important;
+    font-size: 0.9rem !important;
+}
+
+/* Transaction history chart styling */
+.transaction-history {
+    background-color: var(--neutral) !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    color: var(--text-light) !important;
+}
+
+.transaction-history h3 {
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
+}
+
+.chart-container {
+    position: relative !important;
+    margin: auto !important;
+}
+
+/* Project cards styling */
+.project-card {
+    background-color: var(--neutral) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+    border-left: 4px solid var(--primary) !important;
+}
+
+.project-card h4 {
+    color: var(--text-light) !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 5px !important;
+}
+
+.project-card p {
+    color: var(--text-secondary) !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 5px !important;
+}
+
+.project-meta {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 0.8rem !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Stats cards */
+.stat-card {
+    background-color: var(--neutral) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.stat-card .value {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+    margin-bottom: 5px !important;
+}
+
+.stat-card .label {
+    font-size: 0.9rem !important;
+    color: var(--text-secondary) !important;
+}
+
+.stat-card.positive {
+    border-left: 4px solid var(--success) !important;
+}
+
+.stat-card.negative {
+    border-left: 4px solid var(--danger) !important;
+}
+
+.stat-card.neutral {
+    border-left: 4px solid var(--primary) !important;
+}
+
+/* Override Bootstrap table styles for dark theme */
+.table-dark {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+}
+
+.table-dark th,
+.table-dark td {
+    border-color: #333 !important;
+}
+
+/* Override for status badges */
+.status-draft, .status-submitted, .status-approved, 
+.status-rejected, .status-scheduled, .status-inprogress, 
+.status-completed, .status-failed, .status-cancelled {
+    color: var(--text-light) !important;
+    padding: 0.35em 0.65em !important;
+    border-radius: 0.25rem !important;
+}
+
+/* Override for priority badges */
+.priority-low, .priority-medium, .priority-high, .priority-critical {
+    color: var(--text-light) !important;
+    padding: 0.35em 0.65em !important;
+    border-radius: 0.25rem !important;
+}
+
+/* Main content area */
+.main-content {
+    background-color: var(--bg-primary) !important;
+    padding: 20px !important;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: var(--neutral) !important;
+    color: var(--text-light) !important;
+    border-right: 1px solid var(--border-light) !important;
+    min-height: 100vh !important;
+}
+
+.sidebar .nav-link {
+    color: var(--text-secondary) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.sidebar .nav-link:hover, 
+.sidebar .nav-link.active {
+    color: var(--text-light) !important;
+    background-color: rgba(114, 137, 218, 0.1) !important;
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.5rem !important;
+}
+
+/* Header user info */
+.user-info {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    margin-right: 0.5rem !important;
+    background-color: var(--primary) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--text-light) !important;
+    font-weight: bold !important;
+}
+
+.user-name {
+    color: var(--text-light) !important;
+    font-weight: 500 !important;
+}
+
+/* Search box */
+.search-box {
+    background-color: var(--neutral) !important;
+    border: 1px solid #333 !important;
+    color: var(--text-light) !important;
+    border-radius: 0.25rem !important;
+}
+
+.search-box:focus {
+    background-color: var(--neutral-light) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(114, 137, 218, 0.25) !important;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: var(--neutral-dark) !important;
+    border-color: #333 !important;
+    color: var(--text-light) !important;
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--primary) !important;
+}
+
+.badge-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.badge-success {
+    background-color: var(--success) !important;
+}
+
+.badge-danger {
+    background-color: var(--danger) !important;
+}
+
+.badge-warning {
+    background-color: var(--warning) !important;
+    color: #212529 !important;
+}
+
+.badge-info {
+    background-color: var(--info) !important;
+}
+
+/* Progress bars */
+.progress {
+    background-color: var(--neutral-light) !important;
+}
+
+.progress-bar {
+    background-color: var(--primary) !important;
+}
+
+/* Additional styles for better visibility */
+.border {
+    border-color: var(--border-light) !important;
+}
+
+.border-top {
+    border-top-color: var(--border-light) !important;
+}
+
+.border-right {
+    border-right-color: var(--border-light) !important;
+}
+
+.border-bottom {
+    border-bottom-color: var(--border-light) !important;
+}
+
+.border-left {
+    border-left-color: var(--border-light) !important;
+}
+
+/* Improve contrast for input placeholders */
+::placeholder {
+    color: #999999 !important;
+    opacity: 1 !important;
+}
+
+/* Improve focus states */
+*:focus {
+    outline-color: var(--primary) !important;
+}
+
+/* Apply dark theme to the entire page */
+html {
+    background-color: var(--bg-primary) !important;
+}
+
+body {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-light) !important;
+    min-height: 100vh !important;
+}
+
+/* Override Bootstrap's bg-light class which might be applied to the body */
+.bg-light {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Ensure the footer has the correct background */
+footer, .footer {
+    background-color: var(--neutral-dark) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-light) !important;
+}
+
+/* Ensure all containers have the dark background */
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Ensure all rows and columns have transparent backgrounds */
+.row, [class*="col-"] {
+    background-color: transparent !important;
+}
+
+/* Override any default background colors */
+.bg-body, .bg-white, .bg-transparent {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Ensure all cards have proper styling */
+.card {
+    background-color: var(--neutral) !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+/* Ensure all tables have proper styling */
+.table {
+    color: var(--text-light) !important;
+}
+
+/* Ensure all form controls have proper styling */
+.form-control, .form-select, .input-group-text {
+    background-color: var(--neutral-light) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all buttons have proper styling */
+.btn-light, .btn-outline-light {
+    background-color: var(--neutral) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure all modals have proper styling */
+.modal-content {
+    background-color: var(--neutral) !important;
+    border-color: var(--border-light) !important;
+}
+
+/* Ensure all alerts have proper styling */
+.alert {
+    background-color: var(--neutral) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-light) !important;
+}
+
+/* Ensure links in tables are properly styled */
+.table a {
+    color: var(--primary-light) !important;
+    text-decoration: none !important;
+}
+
+.table a:hover {
+    color: var(--primary) !important;
+    text-decoration: underline !important;
+}
+
+/* Ensure badges and status indicators in tables are readable */
+.table .badge {
+    color: var(--text-light) !important;
+    font-weight: 500 !important;
+}
+
+/* Ensure any custom status text in tables is readable */
+.table .status-text,
+.table .text-muted,
+.table small {
+    color: var(--text-secondary) !important;
+} 
