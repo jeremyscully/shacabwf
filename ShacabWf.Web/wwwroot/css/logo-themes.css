@@ -1,0 +1,77 @@
+/* Default theme */
+.theme-logo .logo-circle {
+  fill: #000;
+}
+.theme-logo .logo-inner-circle {
+  fill: #333;
+}
+.theme-logo .logo-text, 
+.theme-logo .logo-car,
+.theme-logo .logo-checkers {
+  fill: #ffc107; /* Default yellow color */
+}
+
+/* Dark theme */
+.dark-theme .theme-logo .logo-circle {
+  fill: #222;
+}
+.dark-theme .theme-logo .logo-inner-circle {
+  fill: #444;
+}
+.dark-theme .theme-logo .logo-text,
+.dark-theme .theme-logo .logo-car,
+.dark-theme .theme-logo .logo-checkers {
+  fill: #ffc107; /* Yellow */
+}
+
+/* ClassicConsole theme */
+.classicconsole-theme .theme-logo .logo-circle {
+  fill: #000080; /* Navy blue */
+}
+.classicconsole-theme .theme-logo .logo-inner-circle {
+  fill: #000050;
+}
+.classicconsole-theme .theme-logo .logo-text,
+.classicconsole-theme .theme-logo .logo-car,
+.classicconsole-theme .theme-logo .logo-checkers {
+  fill: #00ff00; /* Green */
+}
+
+/* Taxi theme */
+.taxi-theme .theme-logo .logo-circle {
+  fill: #000;
+}
+.taxi-theme .theme-logo .logo-inner-circle {
+  fill: #222;
+}
+.taxi-theme .theme-logo .logo-text,
+.taxi-theme .theme-logo .logo-car,
+.taxi-theme .theme-logo .logo-checkers {
+  fill: #ffc107; /* Yellow */
+}
+
+/* Storytime theme */
+.storytime-theme .theme-logo .logo-circle {
+  fill: #4a2c40;
+}
+.storytime-theme .theme-logo .logo-inner-circle {
+  fill: #6a4c60;
+}
+.storytime-theme .theme-logo .logo-text,
+.storytime-theme .theme-logo .logo-car,
+.storytime-theme .theme-logo .logo-checkers {
+  fill: #e6c0d4; /* Light purple */
+}
+
+/* Seattlehousing theme */
+.seattlehousing-theme .theme-logo .logo-circle {
+  fill: #2c5282;
+}
+.seattlehousing-theme .theme-logo .logo-inner-circle {
+  fill: #3182ce;
+}
+.seattlehousing-theme .theme-logo .logo-text,
+.seattlehousing-theme .theme-logo .logo-car,
+.seattlehousing-theme .theme-logo .logo-checkers {
+  fill: #ebf8ff; /* Light blue */
+} 
