@@ -10,7 +10,7 @@
         @if (User.Identity.IsAuthenticated)
         {
             var user = ViewBag.CurrentUser;
-            if (user != null && user.HasRole("Admin"))
+            if (user != null && (user.HasRole("Admin") || user.IsCABMember || user.IsSupportPersonnel))
             {
                 <a asp-action="Create" class="btn btn-primary">Upload New Document</a>
             }

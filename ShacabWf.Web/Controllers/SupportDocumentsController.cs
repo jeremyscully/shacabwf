@@ -77,9 +77,11 @@ namespace ShacabWf.Web.Controllers
             // Set current user for the view
             ViewBag.CurrentUser = currentUser;
             
-            // Check if user has Admin role
-            if (currentUser == null || !currentUser.HasRole("Admin"))
+            // Check if user has Admin role, is a CAB Member, or is Support Personnel
+            if (currentUser == null || 
+                (!currentUser.HasRole("Admin") && !currentUser.IsCABMember && !currentUser.IsSupportPersonnel))
             {
+                _logger.LogWarning($"Unauthorized access attempt by user {User.Identity?.Name}. User does not have required roles or special status.");
                 return RedirectToAction("Index", "Home");
             }
             
@@ -103,10 +105,11 @@ namespace ShacabWf.Web.Controllers
                 // Set current user for the view
                 ViewBag.CurrentUser = currentUser;
                 
-                // Check if user has Admin role
-                if (currentUser == null || !currentUser.HasRole("Admin"))
+                // Check if user has Admin role, is a CAB Member, or is Support Personnel
+                if (currentUser == null || 
+                    (!currentUser.HasRole("Admin") && !currentUser.IsCABMember && !currentUser.IsSupportPersonnel))
                 {
-                    _logger.LogWarning($"Unauthorized access attempt by user {User.Identity.Name}");
+                    _logger.LogWarning($"Unauthorized access attempt by user {User.Identity?.Name}. User does not have required roles or special status.");
                     return RedirectToAction("Index", "Home");
                 }
 
