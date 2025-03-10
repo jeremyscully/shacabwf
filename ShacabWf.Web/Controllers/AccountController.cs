@@ -57,43 +57,13 @@ namespace ShacabWf.Web.Controllers
                         };
 
                         // Add role claims from the Roles property
+                        // The AuthService has already ensured the Roles string is synchronized with special status flags
                         if (!string.IsNullOrEmpty(user.Roles))
                         {
                             foreach (var role in user.Roles.Split(',').Select(r => r.Trim()))
                             {
                                 claims.Add(new Claim(ClaimTypes.Role, role));
                             }
-                        }
-                        else
-                        {
-                            // For backward compatibility, add role claims based on properties
-                            // This ensures existing users still have roles
-                            claims.Add(new Claim(ClaimTypes.Role, "User"));
-
-                            if (user.IsCABMember)
-                            {
-                                claims.Add(new Claim(ClaimTypes.Role, "CABMember"));
-                            }
-
-                            if (user.IsSupportPersonnel)
-                            {
-                                claims.Add(new Claim(ClaimTypes.Role, "Support"));
-                            }
-
-                            // Add Admin role for admin user
-                            if (user.Username.ToLower() == "admin")
-                            {
-                                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-                            }
-
-                            // Update the user's Roles property for future logins
-                            var roles = claims
-                                .Where(c => c.Type == ClaimTypes.Role)
-                                .Select(c => c.Value)
-                                .ToList();
-
-                            user.Roles = string.Join(",", roles);
-                            await _authService.UpdateUserAsync(user);
                         }
 
                         // Create the identity and principal

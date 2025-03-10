@@ -105,21 +105,21 @@ namespace ShacabWf.Web.Controllers
                     model.Email, 
                     model.Department);
                 
-                // Update user roles
+                // Update supervisor
+                await _userService.UpdateSupervisorAsync(model.UserId, model.SupervisorId);
+                
+                // Update CAB member status first
+                await _userService.UpdateCABMemberStatusAsync(model.UserId, model.IsCABMember);
+                
+                // Update support personnel status next
+                await _userService.UpdateSupportPersonnelStatusAsync(model.UserId, model.IsSupportPersonnel);
+                
+                // Update user roles last, which will preserve the special status roles
                 string roles = model.SelectedRoles != null && model.SelectedRoles.Any() 
                     ? string.Join(",", model.SelectedRoles) 
                     : string.Empty;
                 
                 await _userService.UpdateUserRolesAsync(model.UserId, roles);
-                
-                // Update supervisor
-                await _userService.UpdateSupervisorAsync(model.UserId, model.SupervisorId);
-                
-                // Update CAB member status
-                await _userService.UpdateCABMemberStatusAsync(model.UserId, model.IsCABMember);
-                
-                // Update support personnel status
-                await _userService.UpdateSupportPersonnelStatusAsync(model.UserId, model.IsSupportPersonnel);
 
                 _logger.LogInformation("User {UserId} updated successfully by {AdminUsername}", 
                     model.UserId, User.Identity?.Name);
@@ -173,6 +173,25 @@ namespace ShacabWf.Web.Controllers
             {
                 _logger.LogError(ex, "Error retrieving user {UserId} details", id);
                 return View("Error", new ErrorViewModel { Message = "An error occurred while retrieving user details." });
+            }
+        }
+
+        // GET: UserManagement/SyncRoles
+        public async Task<IActionResult> SyncRoles()
+        {
+            try
+            {
+                int updatedCount = await _userService.SyncUserRolesWithSpecialStatusesAsync();
+                
+                _logger.LogInformation("Synchronized roles with special statuses for {Count} users", updatedCount);
+                
+                TempData["SuccessMessage"] = $"Successfully synchronized roles for {updatedCount} users.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error synchronizing user roles with special statuses");
+                return View("Error", new ErrorViewModel { Message = "An error occurred while synchronizing user roles." });
             }
         }
     }

@@ -112,5 +112,11 @@ namespace ShacabWf.Web.Services
         /// <param name="department">Department</param>
         /// <returns>True if successful, false otherwise</returns>
         Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string email, string department);
+        
+        /// <summary>
+        /// Synchronizes all users' roles with their special statuses
+        /// </summary>
+        /// <returns>The number of users updated</returns>
+        Task<int> SyncUserRolesWithSpecialStatusesAsync();
     }
 } 

@@ -70,7 +70,24 @@ namespace ShacabWf.Web.Services
             if (user == null)
                 return false;
                 
-            user.Roles = roles;
+            // Parse the new roles
+            var rolesList = string.IsNullOrEmpty(roles) 
+                ? new List<string>() 
+                : roles.Split(',').Select(r => r.Trim()).ToList();
+            
+            // Ensure special status roles are preserved
+            if (user.IsCABMember && !rolesList.Contains("CABMember"))
+            {
+                rolesList.Add("CABMember");
+            }
+            
+            if (user.IsSupportPersonnel && !rolesList.Contains("Support"))
+            {
+                rolesList.Add("Support");
+            }
+            
+            // Update the roles string
+            user.Roles = string.Join(",", rolesList);
             
             try
             {
@@ -92,6 +109,22 @@ namespace ShacabWf.Web.Services
                 
             user.IsCABMember = isCABMember;
             
+            // Update the roles string to include or remove the CABMember role
+            var roles = string.IsNullOrEmpty(user.Roles) 
+                ? new List<string>() 
+                : user.Roles.Split(',').Select(r => r.Trim()).ToList();
+            
+            if (isCABMember && !roles.Contains("CABMember"))
+            {
+                roles.Add("CABMember");
+            }
+            else if (!isCABMember && roles.Contains("CABMember"))
+            {
+                roles.Remove("CABMember");
+            }
+            
+            user.Roles = string.Join(",", roles);
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -111,6 +144,22 @@ namespace ShacabWf.Web.Services
                 return false;
                 
             user.IsSupportPersonnel = isSupportPersonnel;
+            
+            // Update the roles string to include or remove the Support role
+            var roles = string.IsNullOrEmpty(user.Roles) 
+                ? new List<string>() 
+                : user.Roles.Split(',').Select(r => r.Trim()).ToList();
+            
+            if (isSupportPersonnel && !roles.Contains("Support"))
+            {
+                roles.Add("Support");
+            }
+            else if (!isSupportPersonnel && roles.Contains("Support"))
+            {
+                roles.Remove("Support");
+            }
+            
+            user.Roles = string.Join(",", roles);
             
             try
             {
@@ -241,6 +290,69 @@ namespace ShacabWf.Web.Services
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Synchronizes all users' roles with their special statuses
+        /// </summary>
+        /// <returns>The number of users updated</returns>
+        public async Task<int> SyncUserRolesWithSpecialStatusesAsync()
+        {
+            var users = await _context.Users.ToListAsync();
+            int updatedCount = 0;
+            
+            foreach (var user in users)
+            {
+                bool updated = false;
+                var roles = string.IsNullOrEmpty(user.Roles) 
+                    ? new List<string>() 
+                    : user.Roles.Split(',').Select(r => r.Trim()).ToList();
+                
+                // Ensure User role is present
+                if (!roles.Contains("User"))
+                {
+                    roles.Add("User");
+                    updated = true;
+                }
+                
+                // Sync CABMember role
+                if (user.IsCABMember && !roles.Contains("CABMember"))
+                {
+                    roles.Add("CABMember");
+                    updated = true;
+                }
+                else if (!user.IsCABMember && roles.Contains("CABMember"))
+                {
+                    roles.Remove("CABMember");
+                    updated = true;
+                }
+                
+                // Sync Support role
+                if (user.IsSupportPersonnel && !roles.Contains("Support"))
+                {
+                    roles.Add("Support");
+                    updated = true;
+                }
+                else if (!user.IsSupportPersonnel && roles.Contains("Support"))
+                {
+                    roles.Remove("Support");
+                    updated = true;
+                }
+                
+                if (updated)
+                {
+                    user.Roles = string.Join(",", roles);
+                    updatedCount++;
+                }
+            }
+            
+            // Save all changes to the database
+            if (updatedCount > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+            
+            return updatedCount;
         }
     }
 } 
