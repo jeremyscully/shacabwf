@@ -118,7 +118,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         // GET: /ChangeRequests/Cab
-        [Authorize(Roles = "Admin,CABMember")]
+        [Authorize(Roles = "Admin,CABMember,Support")]
         public async Task<IActionResult> Cab()
         {
             try
@@ -163,7 +163,7 @@ namespace ShacabWf.Web.Controllers
         }
         
         // GET: /ChangeRequests/PendingCalendarData
-        [Authorize(Roles = "Admin,CABMember")]
+        [Authorize(Roles = "Admin,CABMember,Support")]
         public async Task<IActionResult> PendingCalendarData()
         {
             try
@@ -208,7 +208,7 @@ namespace ShacabWf.Web.Controllers
         }
         
         // GET: /ChangeRequests/ScheduledCalendarData
-        [Authorize(Roles = "Admin,CABMember")]
+        [Authorize(Roles = "Admin,CABMember,Support")]
         public async Task<IActionResult> ScheduledCalendarData()
         {
             try
@@ -253,7 +253,7 @@ namespace ShacabWf.Web.Controllers
         }
         
         // GET: /ChangeRequests/CabCalendarData
-        [Authorize(Roles = "Admin,CABMember")]
+        [Authorize(Roles = "Admin,CABMember,Support")]
         public async Task<IActionResult> CabCalendarData()
         {
             try
@@ -535,6 +535,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,CABMember")]
         public async Task<IActionResult> CABApprove(int id, string? comments)
         {
             try
@@ -568,6 +569,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,CABMember")]
         public async Task<IActionResult> CABReject(int id, string? comments)
         {
             try
@@ -601,6 +603,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,CABMember")]
         public async Task<IActionResult> ScheduleChangeRequest(int id, DateTime startDate, DateTime endDate)
         {
             try
@@ -634,6 +637,7 @@ namespace ShacabWf.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,CABMember")]
         public async Task<IActionResult> ApproveAndSchedule(int id, string? comments, DateTime startDate, DateTime endDate)
         {
             try

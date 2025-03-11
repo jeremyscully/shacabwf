@@ -193,16 +193,19 @@
                                             <a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@item.Id" asp-route-source="cab" class="btn btn-sm btn-outline-primary">
                                                 <i class="bi bi-eye"></i> Review
                                             </a>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#scheduleModal" 
-                                                        data-id="@item.Id" data-title="@item.Title" data-action="approve">
-                                                    <i class="bi bi-check-circle"></i> Approve & Schedule
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" 
-                                                        data-id="@item.Id" data-title="@item.Title">
-                                                    <i class="bi bi-x-circle"></i> Reject
-                                                </button>
-                                            </div>
+                                            @if (User.IsInRole("Admin") || User.IsInRole("CABMember"))
+                                            {
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#scheduleModal" 
+                                                            data-id="@item.Id" data-title="@item.Title" data-action="approve">
+                                                        <i class="bi bi-check-circle"></i> Approve & Schedule
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" 
+                                                            data-id="@item.Id" data-title="@item.Title">
+                                                        <i class="bi bi-x-circle"></i> Reject
+                                                    </button>
+                                                </div>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -288,24 +291,27 @@
                                         </td>
                                         <td>@(item.ScheduledStartDate?.ToString("MMM dd, yyyy") ?? "Not scheduled")</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@item.Id" asp-route-source="cab" class="btn btn-sm btn-outline-primary">
-                                                    <i class="bi bi-eye"></i> Manage
-                                                </a>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#rescheduleModal" 
-                                                        data-id="@item.Id" data-title="@item.Title" 
-                                                        data-start="@(item.ScheduledStartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"))" 
-                                                        data-end="@(item.ScheduledEndDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"))">
-                                                    <i class="bi bi-calendar-check"></i> Reschedule
-                                                </button>
-                                                @if (item.Status == ChangeRequestStatus.Scheduled)
-                                                {
-                                                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#completeModal" 
-                                                            data-id="@item.Id" data-title="@item.Title">
-                                                        <i class="bi bi-check-circle"></i> Complete
+                                            <a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@item.Id" asp-route-source="cab" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Review
+                                            </a>
+                                            @if (User.IsInRole("Admin") || User.IsInRole("CABMember"))
+                                            {
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rescheduleModal" 
+                                                            data-id="@item.Id" data-title="@item.Title" 
+                                                            data-start="@(item.ScheduledStartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"))" 
+                                                            data-end="@(item.ScheduledEndDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"))">
+                                                        <i class="bi bi-calendar-check"></i> Reschedule
                                                     </button>
-                                                }
-                                            </div>
+                                                    @if (item.Status == ChangeRequestStatus.Scheduled)
+                                                    {
+                                                        <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#completeModal" 
+                                                                data-id="@item.Id" data-title="@item.Title">
+                                                            <i class="bi bi-check-circle"></i> Complete
+                                                        </button>
+                                                    }
+                                                </div>
+                                            }
                                         </td>
                                     </tr>
                                 }

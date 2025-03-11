@@ -89,7 +89,8 @@
                                                   User.IsInRole("CABMember") || 
                                                   User.IsInRole("Supervisor") || 
                                                   User.IsInRole("Approver") || 
-                                                  User.IsInRole("Implementer");
+                                                  User.IsInRole("Implementer") ||
+                                                  User.IsInRole("Support");
                         }
                         
                         @if (hasElevatedRole)
